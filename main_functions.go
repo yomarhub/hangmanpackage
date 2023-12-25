@@ -2,6 +2,7 @@ package hangmanpackage
 
 import (
 	"log"
+	"math/rand"
 )
 
 // HangManData is a structure that stores :
@@ -46,6 +47,19 @@ func RevealLetters(Data *Data, input string) int {
 		Data.Word = string(WordRune)
 	}
 	return found
+}
+
+// Reveal n letters of the word as starting letters
+func RevealStartingLetters(pData *Data) {
+	n := len([]rune(pData.ToFind))/2 - 1
+	letter := 0
+	for letter < n && n != 0 {
+		randpos := rand.Intn(len(pData.ToFind))
+		if pData.Word[randpos] == '_' {
+			found := RevealLetters(pData, string(pData.ToFind[randpos]))
+			letter += found
+		}
+	}
 }
 
 // Function that test the error and exit the program if needed
