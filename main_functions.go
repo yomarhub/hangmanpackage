@@ -9,17 +9,20 @@ import (
 // the word we have ToFind,
 // the Number of Attempts left,
 // and an array of 10 strings with the display of the HangMan
-type HangManData struct {
-	Word             []rune       // Word composed of '_', ex: H_ll_
-	ToFind           string       // Final word chosen by the program at the beginning. It is the word to find
-	Attempts         int          // Number of attempts left
-	UsedLetters      []rune       // Letters that were already used
-	HangmanPositions [10]string   // It can be the array where the positions parsed in "hangman.txt" are stored
-	Font             [95][]string // Font Used for Ascii Art
+
+type Data struct {
+	Word       string
+	ToFind     string
+	Attempts   int
+	UsedInputs []string
+	Difficulty string
+	Words      []string
+	UserName   string
 }
 
-// Return the number of Uderscores in an rune array, if there is none it mean the word was found
-func UderNbr(word []rune) int {
+// Return the number of Uderscores in a string, if there is none it mean the word was found
+func UderNbr(s string) int {
+	word := []rune(s)
 	c := 0
 	for i := 0; i < len(word); i++ {
 		if word[i] == '_' {
@@ -30,13 +33,17 @@ func UderNbr(word []rune) int {
 }
 
 // Reveal the letter every time it is in the word and return the number of time it found the letter
-func RevealLetters(HMD HangManData, l string) int {
+func RevealLetters(Data *Data, input string) int {
 	found := 0
-	for i := 0; i < len(HMD.ToFind); i++ {
-		if l == string(HMD.ToFind[i]) {
-			HMD.Word[i] = rune(HMD.ToFind[i])
+	WordRune := []rune(Data.Word)
+	for i := 0; i < len(Data.ToFind); i++ {
+		if input == string(Data.ToFind[i]) {
+			WordRune[i] = rune(Data.ToFind[i])
 			found++
 		}
+	}
+	if found > 0 {
+		Data.Word = string(WordRune)
 	}
 	return found
 }
@@ -46,13 +53,12 @@ func TestErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 // Test if the letter is already used
-func Used(HMD HangManData, letter rune) bool {
-	for i := 0; i < len(HMD.UsedLetters); i++ {
-		if letter == HMD.UsedLetters[i] {
+func Used(Data *Data, letter string) bool {
+	for i := 0; i < len(Data.UsedInputs); i++ {
+		if letter == Data.UsedInputs[i] {
 			return true
 		}
 	}

@@ -6,8 +6,8 @@ import (
 )
 
 // Stop and Save the game
-func StopGame(HMD HangManData) error {
-	savedData, err := json.Marshal(HMD)
+func StopGame(HMD *Data) error {
+	savedData, err := json.Marshal(*HMD)
 	TestErr(err)
 
 	file, err := os.Create("save.txt")
@@ -22,7 +22,7 @@ func StopGame(HMD HangManData) error {
 }
 
 // Overwrite an HangManData variable with the saved data in the file
-func ContinueGame(HMD *HangManData, savedDataFile string) {
+func ContinueGame(HMD *Data, savedDataFile string) {
 	encriptedData, err := os.ReadFile(savedDataFile)
 	TestErr(err)
 	json.Unmarshal(encriptedData, HMD)
